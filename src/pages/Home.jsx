@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Card } from "../components/Card";
 import { NelsonPopup } from "../components/NelsonPopup";
 import { GinoPopup } from "../components/GinoPopup";
 import { Hero } from "../components/Hero";
+import elbarto from "../images/elbarto.png";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
@@ -11,6 +13,7 @@ export const Home = () => {
   const [error, setError] = useState(null);
   const [showNelson, setShowNelson] = useState(false);
   const [showGino, setShowGino] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,18 +128,34 @@ export const Home = () => {
       <NelsonPopup show={showNelson} onClose={handleCloseNelson} />
       <GinoPopup show={showGino} onClose={handleCloseGino} />
       <Hero />
-      <div className="container mt-4">
-        <h1 className="text-center mb-4" style={{
-          fontFamily: "'Creepster', cursive",
-          fontSize: "3rem",
-          color: "#FFD90F",
-          textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
-        }}>
-          The Simpsons Characters
-        </h1>
+      <div className="container mt-4" id="characters" style={{ scrollMarginTop: "100px" }}>
+        <div className="d-flex justify-content-center align-items-center mb-4 gap-3">
+          <h1 className="text-center mb-0" style={{
+            fontFamily: "'Creepster', cursive",
+            fontSize: "3rem",
+            color: "#FFD90F",
+            textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+          }}>
+            The Simpsons Characters
+          </h1>
+          <img
+            src={elbarto}
+            alt="El Barto"
+            title="Tip: Try adding Bart to your favorites and then removing him... someone is looking for him!"
+            onClick={() => navigate("/error")}
+            style={{
+              width: "50px",
+              cursor: "pointer",
+              transition: "transform 0.3s",
+              borderRadius: "5px"
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
+            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+          />
+        </div>
         <div className="row g-4">
-          {store.characters.map((character) => (
-            <div key={character.id} className="col-md-4 col-lg-3 col-sm-6">
+          {filteredCharacters.map((character) => (
+            <div key={character.id} className="col-md-4 col-lg-3 col-sm-6 position-relative">
               <Card
                 item={character}
                 onAddFavorite={handleAddFavorite}

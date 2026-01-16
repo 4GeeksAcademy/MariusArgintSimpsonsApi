@@ -219,7 +219,8 @@ export const Navbar = () => {
                   No favorites yet!
                 </li>
               ) : (
-                store.favorites.map((fav) => (
+                <>
+                  {store.favorites.map((fav) => (
                   <li
                     key={fav.id}
                     className="dropdown-item d-flex justify-content-between align-items-center"
@@ -255,7 +256,23 @@ export const Navbar = () => {
                       <span aria-hidden="true">🗑️</span>
                     </button>
                   </li>
-                ))
+                  ))}
+                  <li>
+                    <Link
+                      to="/favorites"
+                      className="dropdown-item text-center"
+                      style={{
+                        fontWeight: "bold",
+                        color: "#000",
+                        backgroundColor: "#FFD90F",
+                        borderTop: "3px solid #000",
+                        padding: "10px"
+                      }}
+                    >
+                      View All Favorites
+                    </Link>
+                  </li>
+                </>
               )}
             </ul>
           </div>

@@ -83,8 +83,8 @@ export const Hero = () => {
         </h1>
 
         <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", justifyContent: "center" }}>
-          <Link
-            to="/"
+          <a
+            href="#characters"
             style={{
               backgroundColor: "#FFD90F",
               color: "#000",
@@ -100,7 +100,7 @@ export const Hero = () => {
             onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
           >
             Meet the Characters
-          </Link>
+          </a>
           <Link
             to="/episodes"
             style={{
