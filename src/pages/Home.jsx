@@ -81,8 +81,7 @@ export const Home = () => {
     setShowGino(false);
   }, []);
 
-  const filtereddd .
-  haracters = store.searchQuery
+  const filteredCharacters = store.searchQuery
     ? store.characters.filter(char =>
         char.name.toLowerCase().includes(store.searchQuery.toLowerCase())
       )
