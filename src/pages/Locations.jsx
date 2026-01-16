@@ -3,6 +3,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
 import { escapeSVG } from "../utils/formatters";
 import { NelsonPopup } from "../components/NelsonPopup";
+import { PageNav } from "../components/PageNav";
 
 export const Locations = () => {
   const { store, dispatch } = useGlobalReducer();
@@ -110,6 +111,7 @@ export const Locations = () => {
     <>
       <NelsonPopup show={showNelson} onClose={handleCloseNelson} />
       <div className="container mt-4">
+        <PageNav currentPage="/locations" />
         <h1 className="text-center mb-4" style={{
           fontFamily: "'Creepster', cursive",
           fontSize: "3rem",

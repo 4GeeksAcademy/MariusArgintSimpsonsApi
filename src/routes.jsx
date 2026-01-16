@@ -16,16 +16,19 @@ import { Search } from "./pages/Search";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<Layout />} errorElement={<ErrorPage />} >
-        <Route path= "/" element={<Home />} />
-        <Route path="/character/:id" element={<CharacterDetail />} />
-        <Route path="/episodes" element={<Episodes />} />
-        <Route path="/episode/:id" element={<EpisodeDetail />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/location/:id" element={<LocationDetail />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/search" element={<Search />} />
+      <>
+        <Route path="/" element={<Layout />} errorElement={<ErrorPage />} >
+          <Route path= "/" element={<Home />} />
+          <Route path="/character/:id" element={<CharacterDetail />} />
+          <Route path="/episodes" element={<Episodes />} />
+          <Route path="/episode/:id" element={<EpisodeDetail />} />
+          <Route path="/locations" element={<Locations />} />
+          <Route path="/location/:id" element={<LocationDetail />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/search" element={<Search />} />
+        </Route>
+        <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />
-      </Route>
+      </>
     )
 );

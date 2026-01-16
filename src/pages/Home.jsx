@@ -5,6 +5,7 @@ import { Card } from "../components/Card";
 import { NelsonPopup } from "../components/NelsonPopup";
 import { GinoPopup } from "../components/GinoPopup";
 import { Hero } from "../components/Hero";
+import { PageNav } from "../components/PageNav";
 import elbarto from "../images/elbarto.png";
 
 export const Home = () => {
@@ -129,6 +130,7 @@ export const Home = () => {
       <GinoPopup show={showGino} onClose={handleCloseGino} />
       <Hero />
       <div className="container mt-4" id="characters" style={{ scrollMarginTop: "100px" }}>
+        <PageNav currentPage="/" />
         <div className="d-flex justify-content-center align-items-center mb-4 gap-3">
           <h1 className="text-center mb-0" style={{
             fontFamily: "'Creepster', cursive",
@@ -144,7 +146,7 @@ export const Home = () => {
             title="Tip: Try adding Bart to your favorites and then removing him... someone is looking for him!"
             onClick={() => navigate("/error")}
             style={{
-              width: "50px",
+              width: "80px",
               cursor: "pointer",
               transition: "transform 0.3s",
               borderRadius: "5px"
