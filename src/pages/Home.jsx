@@ -131,10 +131,10 @@ export const Home = () => {
       <Hero />
       <div className="container mt-4" id="characters" style={{ scrollMarginTop: "100px" }}>
         <PageNav currentPage="/" />
-        <div className="d-flex justify-content-center align-items-center mb-4 gap-3">
+        <div className="d-flex justify-content-center align-items-center mb-4 gap-2 flex-wrap">
           <h1 className="text-center mb-0" style={{
             fontFamily: "'Creepster', cursive",
-            fontSize: "3rem",
+            fontSize: "clamp(1.5rem, 5vw, 3rem)",
             color: "#FFD90F",
             textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
           }}>
@@ -146,7 +146,7 @@ export const Home = () => {
             title="Tip: Try adding Bart to your favorites and then removing him... someone is looking for him!"
             onClick={() => navigate("/error")}
             style={{
-              width: "80px",
+              width: "clamp(50px, 10vw, 80px)",
               cursor: "pointer",
               transition: "transform 0.3s",
               borderRadius: "5px"

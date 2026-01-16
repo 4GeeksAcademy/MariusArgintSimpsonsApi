@@ -114,7 +114,7 @@ export const Episodes = () => {
         <PageNav currentPage="/episodes" />
         <h1 className="text-center mb-4" style={{
           fontFamily: "'Creepster', cursive",
-          fontSize: "3rem",
+          fontSize: "clamp(1.5rem, 5vw, 3rem)",
           color: "#FFD90F",
           textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
         }}>

@@ -107,85 +107,85 @@ export const Navbar = () => {
       <GinoPopup show={showGino} onClose={handleCloseGino} />
     <nav className="navbar mb-3" style={{
       backgroundColor: "#87CEEB",
-      borderBottom: "4px solid #000"
+      borderBottom: "4px solid #000",
+      padding: "10px 0"
     }}>
       <div className="container">
-        <div className="d-flex align-items-center gap-3">
+        <div className="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2">
           <Link to="/" className="text-decoration-none" onClick={handleClearSearch}>
             <span className="navbar-brand mb-0 h1" style={{
               fontFamily: "'Creepster', cursive",
-              fontSize: "2rem",
+              fontSize: "clamp(1.2rem, 4vw, 2rem)",
               color: "#FFD90F",
               textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
             }}>
               The Simpsons
             </span>
           </Link>
-          <form onSubmit={handleSearch} className="d-flex position-relative" role="search" ref={searchRef}>
-            <input
-              type="search"
-              className="form-control"
-              placeholder="Search..."
-              aria-label="Search characters"
-              value={searchQuery}
-              autoComplete="off"
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                border: "3px solid #000",
-                borderRadius: "10px 0 0 10px",
-                fontWeight: "bold"
-              }}
-            />
-            <button
-              type="submit"
-              className="btn"
-              style={{
-                backgroundColor: "#FFD90F",
-                color: "#000",
-                border: "3px solid #000",
-                borderLeft: "none",
-                borderRadius: "0 10px 10px 0",
-                fontWeight: "bold"
-              }}
-              aria-label="Search"
-            >
-              🔍
-            </button>
-            
-            {/* Autocomplete Dropdown */}
-            {showDropdown && searchResults.length > 0 && (
-              <ul className="dropdown-menu show w-100" style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                marginTop: "5px",
-                border: "3px solid #000",
-                backgroundColor: "#fff",
-                maxHeight: "300px",
-                overflowY: "auto",
-                zIndex: 1000
-              }}>
-                {searchResults.map((item, index) => (
-                  <li key={`${item.type}-${item.id}-${index}`}>
-                    <button
-                      className="dropdown-item d-flex justify-content-between align-items-center"
-                      onClick={() => handleResultClick(item)}
-                      type="button"
-                      style={{ cursor: "pointer" }}
-                    >
-                      <span className="text-truncate" style={{ maxWidth: "70%" }}>{item.name}</span>
-                      <span className="badge rounded-pill" style={{ backgroundColor: "#87CEEB", color: "#000", border: "1px solid #000", fontSize: "0.7rem" }}>
-                        {item.type}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </form>
-        </div>
-        <div className="ml-auto d-flex align-items-center gap-2">
-          <div className="dropdown">
+          <div className="d-flex align-items-center gap-2 flex-grow-1 justify-content-end" style={{ maxWidth: "500px" }}>
+            <form onSubmit={handleSearch} className="d-flex position-relative flex-grow-1" role="search" ref={searchRef} style={{ minWidth: "120px" }}>
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Search..."
+                aria-label="Search"
+                value={searchQuery}
+                autoComplete="off"
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  border: "3px solid #000",
+                  borderRadius: "10px 0 0 10px",
+                  fontWeight: "bold",
+                  fontSize: "clamp(0.8rem, 2vw, 1rem)"
+                }}
+              />
+              <button
+                type="submit"
+                className="btn"
+                style={{
+                  backgroundColor: "#FFD90F",
+                  color: "#000",
+                  border: "3px solid #000",
+                  borderLeft: "none",
+                  borderRadius: "0 10px 10px 0",
+                  fontWeight: "bold",
+                  padding: "0.375rem 0.5rem"
+                }}
+                aria-label="Search"
+              >
+                🔍
+              </button>
+              {showDropdown && searchResults.length > 0 && (
+                <ul className="dropdown-menu show w-100" style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  marginTop: "5px",
+                  border: "3px solid #000",
+                  backgroundColor: "#fff",
+                  maxHeight: "300px",
+                  overflowY: "auto",
+                  zIndex: 1000
+                }}>
+                  {searchResults.map((item, index) => (
+                    <li key={`${item.type}-${item.id}-${index}`}>
+                      <button
+                        className="dropdown-item d-flex justify-content-between align-items-center"
+                        onClick={() => handleResultClick(item)}
+                        type="button"
+                        style={{ cursor: "pointer", fontSize: "0.9rem" }}
+                      >
+                        <span className="text-truncate" style={{ maxWidth: "70%" }}>{item.name}</span>
+                        <span className="badge rounded-pill" style={{ backgroundColor: "#87CEEB", color: "#000", border: "1px solid #000", fontSize: "0.65rem" }}>
+                          {item.type}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </form>
+            <div className="dropdown">
             <button
               className="btn dropdown-toggle"
               type="button"
@@ -275,6 +275,7 @@ export const Navbar = () => {
                 </>
               )}
             </ul>
+            </div>
           </div>
         </div>
       </div>

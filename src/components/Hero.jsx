@@ -11,6 +11,7 @@ export const Hero = () => {
       width: "100vw",
       marginLeft: "calc(50% - 50vw)",
       height: "100vh",
+      minHeight: "500px",
       overflow: "hidden",
       marginBottom: "30px"
     }}>
@@ -74,23 +75,24 @@ export const Hero = () => {
       }}>
         <h1 style={{
           fontFamily: "'Creepster', cursive",
-          fontSize: "4.5rem",
+          fontSize: "clamp(2rem, 8vw, 4.5rem)",
           color: "#FFD90F",
           textShadow: "5px 5px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000",
-          marginBottom: "20px"
+          marginBottom: "20px",
+          padding: "0 10px"
         }}>
           Welcome to Springfield!
         </h1>
 
-        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center", padding: "0 15px" }}>
           <a
             href="#characters"
             style={{
               backgroundColor: "#FFD90F",
               color: "#000",
               border: "3px solid #000",
-              padding: "15px 30px",
-              fontSize: "1.2rem",
+              padding: "clamp(10px, 2vw, 15px) clamp(15px, 3vw, 30px)",
+              fontSize: "clamp(0.9rem, 2vw, 1.2rem)",
               fontWeight: "bold",
               textDecoration: "none",
               borderRadius: "10px",
@@ -107,8 +109,8 @@ export const Hero = () => {
               backgroundColor: "#87CEEB",
               color: "#000",
               border: "3px solid #000",
-              padding: "15px 30px",
-              fontSize: "1.2rem",
+              padding: "clamp(10px, 2vw, 15px) clamp(15px, 3vw, 30px)",
+              fontSize: "clamp(0.9rem, 2vw, 1.2rem)",
               fontWeight: "bold",
               textDecoration: "none",
               borderRadius: "10px",
@@ -125,8 +127,8 @@ export const Hero = () => {
               backgroundColor: "#fff",
               color: "#000",
               border: "3px solid #000",
-              padding: "15px 30px",
-              fontSize: "1.2rem",
+              padding: "clamp(10px, 2vw, 15px) clamp(15px, 3vw, 30px)",
+              fontSize: "clamp(0.9rem, 2vw, 1.2rem)",
               fontWeight: "bold",
               textDecoration: "none",
               borderRadius: "10px",

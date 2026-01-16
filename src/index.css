@@ -166,3 +166,61 @@ button:focus-visible {
 .spinner-border {
   color: var(--simpsons-yellow) !important;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .simpsons-title {
+    font-size: 2rem;
+  }
+
+  .simpsons-title-large {
+    font-size: 2.5rem;
+  }
+
+  .simpsons-title-medium {
+    font-size: 1.5rem;
+  }
+
+  .navbar .container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar .d-flex.align-items-center.gap-3 {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar form[role="search"] {
+    width: 100%;
+  }
+
+  .navbar input[type="search"] {
+    width: 100%;
+  }
+
+  .favorite-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .simpsons-title {
+    font-size: 1.5rem;
+  }
+
+  .simpsons-title-large {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+}
