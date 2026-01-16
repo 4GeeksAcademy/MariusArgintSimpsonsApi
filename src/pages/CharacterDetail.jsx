@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getCharacterDescription, getCharacterImage } from "../utils/simpsonsData";
+import { escapeSVG, formatGender } from "../utils/formatters";
 
 export const CharacterDetail = () => {
   const { id } = useParams();
   const [character, setCharacter] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imgError, setImgError] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`https://thesimpsonsapi.com/api/characters/${id}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: Failed to fetch character`);
+        }
+        return res.json();
+      })
       .then(data => {
         setCharacter(data);
         setLoading(false);
       })
       .catch(error => {
         console.error("Error fetching character:", error);
+        setError(error.message);
         setLoading(false);
       });
   }, [id]);
@@ -31,6 +38,29 @@ export const CharacterDetail = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="container mt-5 text-center">
+        <h2 style={{ color: "#FFD90F" }}>D'oh! Something went wrong</h2>
+        <p style={{ color: "#000", backgroundColor: "#fff", padding: "20px", borderRadius: "10px", border: "3px solid #000" }}>
+          {error}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="btn btn-lg mt-3"
+          style={{
+            backgroundColor: "#FFD90F",
+            color: "#000",
+            border: "3px solid #000",
+            fontWeight: "bold"
+          }}
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
   if (!character) {
     return (
       <div className="container mt-5 text-center">
@@ -41,16 +71,13 @@ export const CharacterDetail = () => {
   }
 
   const handleImageError = (e) => {
-    if (!imgError) {
-      setImgError(true);
-      const svg = `
-        <svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
-          <rect width="600" height="600" fill="#FFD90F"/>
-          <text x="300" y="300" font-size="48" text-anchor="middle" fill="#000" font-weight="bold">${character.name}</text>
-        </svg>
-      `;
-      e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
-    }
+    const svg = `
+      <svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+        <rect width="600" height="600" fill="#FFD90F"/>
+        <text x="300" y="300" font-size="48" text-anchor="middle" fill="#000" font-weight="bold">${escapeSVG(character.name)}</text>
+      </svg>
+    `;
+    e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
   };
 
   return (
@@ -151,7 +178,7 @@ export const CharacterDetail = () => {
             }}>
               <strong style={{ color: "#000", fontSize: "1.2rem" }}>Gender</strong>
               <p style={{ color: "#000", fontSize: "1.1rem", marginTop: "10px", marginBottom: 0 }}>
-                {character.gender === 'Male' || character.gender === 'm' ? '👨 Male' : character.gender === 'Female' || character.gender === 'f' ? '👩 Female' : 'Unknown'}
+                {formatGender(character.gender) || 'Unknown'}
               </p>
             </div>
           </div>

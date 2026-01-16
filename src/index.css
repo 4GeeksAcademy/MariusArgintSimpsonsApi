@@ -1,0 +1,168 @@
+/* CSS Variables for consistent theming */
+:root {
+  --simpsons-yellow: #FFD90F;
+  --simpsons-blue: #87CEEB;
+  --simpsons-black: #000;
+  --simpsons-white: #fff;
+  --simpsons-cream: #FFF5E6;
+  --simpsons-red: #FF0000;
+  --simpsons-orange: #FF6B35;
+
+  /* Spacing */
+  --border-width: 3px;
+  --border-radius: 10px;
+  --card-padding: 20px;
+}
+
+/* Reusable Title Class */
+.simpsons-title {
+  font-family: 'Creepster', cursive;
+  font-size: 3rem;
+  color: var(--simpsons-yellow);
+  text-shadow: 3px 3px 0 var(--simpsons-black),
+               -1px -1px 0 var(--simpsons-black),
+               1px -1px 0 var(--simpsons-black),
+               -1px 1px 0 var(--simpsons-black);
+}
+
+.simpsons-title-large {
+  font-family: 'Creepster', cursive;
+  font-size: 3.5rem;
+  color: var(--simpsons-yellow);
+  text-shadow: 4px 4px 0 var(--simpsons-black),
+               -2px -2px 0 var(--simpsons-black),
+               2px -2px 0 var(--simpsons-black),
+               -2px 2px 0 var(--simpsons-black);
+}
+
+.simpsons-title-medium {
+  font-family: 'Creepster', cursive;
+  font-size: 2rem;
+  color: var(--simpsons-yellow);
+  text-shadow: 3px 3px 0 var(--simpsons-black),
+               -1px -1px 0 var(--simpsons-black),
+               1px -1px 0 var(--simpsons-black),
+               -1px 1px 0 var(--simpsons-black);
+}
+
+/* Reusable Button Classes */
+.btn-simpsons {
+  background-color: var(--simpsons-yellow);
+  color: var(--simpsons-black);
+  border: var(--border-width) solid var(--simpsons-black);
+  font-weight: bold;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-simpsons:hover {
+  background-color: var(--simpsons-yellow);
+  color: var(--simpsons-black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Reusable Card Classes */
+.card-simpsons {
+  background-color: var(--simpsons-blue);
+  border: var(--border-width) solid var(--simpsons-black);
+  border-radius: var(--border-radius);
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Info Box */
+.info-box {
+  background-color: var(--simpsons-blue);
+  border: var(--border-width) solid var(--simpsons-black);
+  border-radius: var(--border-radius);
+  padding: var(--card-padding);
+}
+
+.info-box-yellow {
+  background-color: var(--simpsons-yellow);
+  border: var(--border-width) solid var(--simpsons-black);
+  border-radius: var(--border-radius);
+  padding: var(--card-padding);
+}
+
+.info-box-white {
+  background-color: var(--simpsons-white);
+  border: var(--border-width) solid var(--simpsons-black);
+  border-radius: var(--border-radius);
+  padding: var(--card-padding);
+}
+
+/* Navbar Styles */
+.navbar-simpsons {
+  background-color: var(--simpsons-blue);
+  border-bottom: 4px solid var(--simpsons-black);
+}
+
+/* Error Container */
+.error-container {
+  color: var(--simpsons-black);
+  background-color: var(--simpsons-white);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--simpsons-black);
+}
+
+/* Favorite Button */
+.favorite-btn {
+  font-size: 1.5rem;
+  border: 2px solid var(--simpsons-black);
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-btn.is-favorite {
+  background: var(--simpsons-yellow);
+  color: var(--simpsons-red);
+}
+
+.favorite-btn:not(.is-favorite) {
+  background: transparent;
+  color: var(--simpsons-black);
+}
+
+/* Accessibility improvements */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible for keyboard navigation */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--simpsons-yellow);
+  outline-offset: 2px;
+}
+
+/* Loading spinner */
+.spinner-border {
+  color: var(--simpsons-yellow) !important;
+}

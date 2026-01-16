@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { escapeSVG, formatDate } from "../utils/formatters";
 
 export const EpisodeDetail = () => {
   const { id } = useParams();
   const [episode, setEpisode] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imgError, setImgError] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`https://thesimpsonsapi.com/api/episodes/${id}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: Failed to fetch episode`);
+        }
+        return res.json();
+      })
       .then(data => {
         setEpisode(data);
         setLoading(false);
       })
       .catch(error => {
         console.error("Error fetching episode:", error);
+        setError(error.message);
         setLoading(false);
       });
   }, [id]);
@@ -26,6 +33,29 @@ export const EpisodeDetail = () => {
         <div className="spinner-border" style={{ color: "#FFD90F" }} role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-5 text-center">
+        <h2 style={{ color: "#FFD90F" }}>D'oh! Something went wrong</h2>
+        <p style={{ color: "#000", backgroundColor: "#fff", padding: "20px", borderRadius: "10px", border: "3px solid #000" }}>
+          {error}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="btn btn-lg mt-3"
+          style={{
+            backgroundColor: "#FFD90F",
+            color: "#000",
+            border: "3px solid #000",
+            fontWeight: "bold"
+          }}
+        >
+          Try Again
+        </button>
       </div>
     );
   }
@@ -44,16 +74,13 @@ export const EpisodeDetail = () => {
   };
 
   const handleImageError = (e) => {
-    if (!imgError) {
-      setImgError(true);
-      const svg = `
-        <svg width="600" height="338" xmlns="http://www.w3.org/2000/svg">
-          <rect width="600" height="338" fill="#FFD90F"/>
-          <text x="300" y="169" font-size="48" text-anchor="middle" fill="#000" font-weight="bold">Episode ${episode.episode_number}</text>
-        </svg>
-      `;
-      e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
-    }
+    const svg = `
+      <svg width="600" height="338" xmlns="http://www.w3.org/2000/svg">
+        <rect width="600" height="338" fill="#FFD90F"/>
+        <text x="300" y="169" font-size="48" text-anchor="middle" fill="#000" font-weight="bold">Episode ${escapeSVG(String(episode.episode_number))}</text>
+      </svg>
+    `;
+    e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
   };
 
   return (
@@ -96,12 +123,7 @@ export const EpisodeDetail = () => {
               Season {episode.season}, Episode {episode.episode_number}
             </h3>
             <p style={{ color: "#000", fontSize: "1.2rem", marginBottom: 0 }}>
-              📅 Aired: {new Date(episode.airdate).toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
+              📅 Aired: {formatDate(episode.airdate, true)}
             </p>
           </div>
           <div style={{

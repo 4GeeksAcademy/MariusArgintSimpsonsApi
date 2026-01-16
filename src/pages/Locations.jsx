@@ -1,18 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import { escapeSVG } from "../utils/formatters";
+import { NelsonPopup } from "../components/NelsonPopup";
 
 export const Locations = () => {
   const { store, dispatch } = useGlobalReducer();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showNelson, setShowNelson] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const responses = await Promise.all([
           fetch("https://thesimpsonsapi.com/api/locations?page=1"),
           fetch("https://thesimpsonsapi.com/api/locations?page=2"),
           fetch("https://thesimpsonsapi.com/api/locations?page=3")
         ]);
+
+        responses.forEach((res, index) => {
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status} on page ${index + 1}`);
+          }
+        });
 
         const dataArrays = await Promise.all(responses.map(res => res.json()));
 
@@ -25,13 +38,16 @@ export const Locations = () => {
         dispatch({ type: "set_locations", payload: validLocations });
       } catch (error) {
         console.error("Error fetching locations:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     if (store.locations.length === 0) {
       fetchData();
     }
-  }, []);
+  }, [store.locations.length, dispatch]);
 
   const getLocationImage = (locationId) => {
     return `https://cdn.thesimpsonsapi.com/500/location/${locationId}.webp`;
@@ -39,12 +55,13 @@ export const Locations = () => {
 
   const handleAddFavorite = (location, e) => {
     e.preventDefault();
-    const isFavorite = store.favorites.some(fav => fav.id === location.id && fav.type === 'location');
+    const isFav = store.favorites.some(fav => fav.id === location.id && fav.type === 'location');
 
-    if (isFavorite) {
+    if (isFav) {
       dispatch({ type: "remove_favorite", payload: { id: location.id, type: 'location' } });
     } else {
       dispatch({ type: "add_favorite", payload: { ...location, type: 'location' } });
+      setShowNelson(true);
     }
   };
 
@@ -52,18 +69,57 @@ export const Locations = () => {
     return store.favorites.some(fav => fav.id === id && fav.type === 'location');
   };
 
+  const handleCloseNelson = useCallback(() => {
+    setShowNelson(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mt-5 text-center">
+        <div className="spinner-border" style={{ color: "#FFD90F" }} role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-5 text-center">
+        <h2 style={{ color: "#FFD90F" }}>D'oh! Something went wrong</h2>
+        <p style={{ color: "#000", backgroundColor: "#fff", padding: "20px", borderRadius: "10px", border: "3px solid #000" }}>
+          {error}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="btn btn-lg mt-3"
+          style={{
+            backgroundColor: "#FFD90F",
+            color: "#000",
+            border: "3px solid #000",
+            fontWeight: "bold"
+          }}
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mt-4">
-      <h1 className="text-center mb-4" style={{
-        fontFamily: "'Creepster', cursive",
-        fontSize: "3rem",
-        color: "#FFD90F",
-        textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
-      }}>
-        Springfield Locations
-      </h1>
-      <div className="row g-4">
-        {store.locations.map((location) => (
+    <>
+      <NelsonPopup show={showNelson} onClose={handleCloseNelson} />
+      <div className="container mt-4">
+        <h1 className="text-center mb-4" style={{
+          fontFamily: "'Creepster', cursive",
+          fontSize: "3rem",
+          color: "#FFD90F",
+          textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+        }}>
+          Springfield Locations
+        </h1>
+        <div className="row g-4">
+          {store.locations.map((location) => (
           <div key={location.id} className="col-md-6 col-lg-4">
             <div className="card h-100" style={{
               backgroundColor: "#87CEEB",
@@ -88,7 +144,7 @@ export const Locations = () => {
                     const svg = `
                       <svg width="500" height="281" xmlns="http://www.w3.org/2000/svg">
                         <rect width="500" height="281" fill="#FFD90F"/>
-                        <text x="250" y="140" font-size="24" text-anchor="middle" fill="#000" font-weight="bold">${location.name}</text>
+                        <text x="250" y="140" font-size="24" text-anchor="middle" fill="#000" font-weight="bold">${escapeSVG(location.name)}</text>
                       </svg>
                     `;
                     e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
@@ -163,8 +219,9 @@ export const Locations = () => {
                 </div>
               </div>
           </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -11,7 +11,7 @@ export const characterDescriptions = {
   "Maude Flanders": "Ned Flanders' late wife who was known for her equally devout religious beliefs and kind nature. She tragically died after being knocked off the grandstand by a t-shirt cannon.",
   "Rod Flanders": "One of Ned Flanders' polite and deeply religious sons. Rod and his brother Todd are always well-behaved and follow their father's strict Christian values.",
   "Todd Flanders": "Ned Flanders' younger son who is just as religious and well-mannered as his brother Rod, though he occasionally rebels in small ways.",
-  "Charles Montgomery Burns": "The ancient, evil owner of the Springfield Nuclear Power Plant. Mr. Burns is Springfield's wealthiest and most powerful resident at 1381 years old, known for his greed and heartlessness.",
+  "Charles Montgomery Burns": "The ancient, evil owner of the Springfield Nuclear Power Plant. Mr. Burns is Springfield's wealthiest and most powerful resident at 104 years old, known for his greed and heartlessness.",
   "Waylon Smithers, Jr.": "Mr. Burns' deeply devoted personal assistant and executive at the power plant. Smithers is unfailingly loyal to Burns and handles all aspects of his professional and personal life.",
   "Krusty the Clown": "Herschel Shmoikel Pinchas Yerucham Krustofsky, the cynical children's entertainer and host of 'The Krusty the Clown Show.' Despite his child-friendly persona, Krusty lives a life of vice and poor financial decisions.",
   "Moe Szyslak": "The grumpy bartender and owner of Moe's Tavern, Homer's favorite hangout spot. Despite his surly exterior, Moe occasionally shows a softer side and desperately seeks companionship.",
@@ -58,6 +58,10 @@ export const characterImages = {
 };
 
 export const getCharacterDescription = (name) => {
+  // Validate input
+  if (!name || typeof name !== 'string') {
+    return characterDescriptions.default;
+  }
   return characterDescriptions[name] || characterDescriptions.default;
 };
 

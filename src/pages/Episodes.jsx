@@ -1,18 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import { escapeSVG, formatDate } from "../utils/formatters";
+import { NelsonPopup } from "../components/NelsonPopup";
 
 export const Episodes = () => {
   const { store, dispatch } = useGlobalReducer();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showNelson, setShowNelson] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const responses = await Promise.all([
           fetch("https://thesimpsonsapi.com/api/episodes?page=1"),
           fetch("https://thesimpsonsapi.com/api/episodes?page=2"),
           fetch("https://thesimpsonsapi.com/api/episodes?page=3")
         ]);
+
+        responses.forEach((res, index) => {
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status} on page ${index + 1}`);
+          }
+        });
 
         const dataArrays = await Promise.all(responses.map(res => res.json()));
 
@@ -25,13 +38,16 @@ export const Episodes = () => {
         dispatch({ type: "set_episodes", payload: validEpisodes });
       } catch (error) {
         console.error("Error fetching episodes:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     if (store.episodes.length === 0) {
       fetchData();
     }
-  }, []);
+  }, [store.episodes.length, dispatch]);
 
   const getEpisodeImage = (episodeId) => {
     return `https://cdn.thesimpsonsapi.com/500/episode/${episodeId}.webp`;
@@ -39,12 +55,13 @@ export const Episodes = () => {
 
   const handleAddFavorite = (episode, e) => {
     e.preventDefault();
-    const isFavorite = store.favorites.some(fav => fav.id === episode.id && fav.type === 'episode');
+    const isFav = store.favorites.some(fav => fav.id === episode.id && fav.type === 'episode');
 
-    if (isFavorite) {
+    if (isFav) {
       dispatch({ type: "remove_favorite", payload: { id: episode.id, type: 'episode' } });
     } else {
       dispatch({ type: "add_favorite", payload: { ...episode, type: 'episode' } });
+      setShowNelson(true);
     }
   };
 
@@ -52,18 +69,57 @@ export const Episodes = () => {
     return store.favorites.some(fav => fav.id === id && fav.type === 'episode');
   };
 
+  const handleCloseNelson = useCallback(() => {
+    setShowNelson(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mt-5 text-center">
+        <div className="spinner-border" style={{ color: "#FFD90F" }} role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-5 text-center">
+        <h2 style={{ color: "#FFD90F" }}>D'oh! Something went wrong</h2>
+        <p style={{ color: "#000", backgroundColor: "#fff", padding: "20px", borderRadius: "10px", border: "3px solid #000" }}>
+          {error}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="btn btn-lg mt-3"
+          style={{
+            backgroundColor: "#FFD90F",
+            color: "#000",
+            border: "3px solid #000",
+            fontWeight: "bold"
+          }}
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mt-4">
-      <h1 className="text-center mb-4" style={{
-        fontFamily: "'Creepster', cursive",
-        fontSize: "3rem",
-        color: "#FFD90F",
-        textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
-      }}>
-        The Simpsons Episodes
-      </h1>
-      <div className="row g-4">
-        {store.episodes.map((episode) => (
+    <>
+      <NelsonPopup show={showNelson} onClose={handleCloseNelson} />
+      <div className="container mt-4">
+        <h1 className="text-center mb-4" style={{
+          fontFamily: "'Creepster', cursive",
+          fontSize: "3rem",
+          color: "#FFD90F",
+          textShadow: "3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+        }}>
+          The Simpsons Episodes
+        </h1>
+        <div className="row g-4">
+          {store.episodes.map((episode) => (
           <div key={episode.id} className="col-md-6 col-lg-4">
             <div className="card h-100" style={{
               backgroundColor: "#87CEEB",
@@ -89,7 +145,7 @@ export const Episodes = () => {
                     const svg = `
                       <svg width="500" height="281" xmlns="http://www.w3.org/2000/svg">
                         <rect width="500" height="281" fill="#FFD90F"/>
-                        <text x="250" y="140" font-size="24" text-anchor="middle" fill="#000" font-weight="bold">Episode ${episode.episode_number}</text>
+                        <text x="250" y="140" font-size="24" text-anchor="middle" fill="#000" font-weight="bold">Episode ${escapeSVG(String(episode.episode_number))}</text>
                       </svg>
                     `;
                     e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
@@ -114,11 +170,7 @@ export const Episodes = () => {
                       S{episode.season}E{episode.episode_number}: {episode.name}
                     </h5>
                     <p className="card-text" style={{ color: "#000", fontSize: "0.9rem" }}>
-                      📅 Aired: {new Date(episode.airdate).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      📅 Aired: {formatDate(episode.airdate)}
                     </p>
                     <p className="card-text" style={{
                       color: "#000",
@@ -163,8 +215,9 @@ export const Episodes = () => {
                 </div>
               </div>
           </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

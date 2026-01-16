@@ -1,22 +1,17 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import PropTypes from "prop-types";
 import { getCharacterImage } from "../utils/simpsonsData";
+import { escapeSVG, formatGender } from "../utils/formatters";
 
 export const Card = ({ item, onAddFavorite, isFavorite }) => {
-  const [imgError, setImgError] = useState(false);
-
   const handleImageError = (e) => {
-    if (!imgError) {
-      setImgError(true);
-      const svg = `
-        <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="300" fill="#FFD90F"/>
-          <text x="150" y="150" font-size="24" text-anchor="middle" fill="#000" font-weight="bold">${item.name}</text>
-        </svg>
-      `;
-      e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
-    }
+    const svg = `
+      <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="300" fill="#FFD90F"/>
+        <text x="150" y="150" font-size="24" text-anchor="middle" fill="#000" font-weight="bold">${escapeSVG(item.name)}</text>
+      </svg>
+    `;
+    e.target.src = `data:image/svg+xml;base64,${btoa(svg)}`;
   };
 
   return (
@@ -28,7 +23,7 @@ export const Card = ({ item, onAddFavorite, isFavorite }) => {
       <img
         src={getCharacterImage(item.id)}
         className="card-img-top"
-        alt={item.name}
+        alt={`Portrait of ${item.name}, character from The Simpsons`}
         onError={handleImageError}
         style={{
           height: "250px",
@@ -47,7 +42,7 @@ export const Card = ({ item, onAddFavorite, isFavorite }) => {
         </h5>
         {item.gender && (
           <p className="text-center mb-2" style={{ color: "#000", fontSize: "0.9rem" }}>
-            {item.gender === 'Male' || item.gender === 'm' ? '👨 Male' : item.gender === 'Female' || item.gender === 'f' ? '👩 Female' : ''}
+            {formatGender(item.gender)}
           </p>
         )}
         <div className="d-flex justify-content-between align-items-center mt-auto">
@@ -66,6 +61,8 @@ export const Card = ({ item, onAddFavorite, isFavorite }) => {
           <button
             className="btn btn-sm"
             onClick={() => onAddFavorite(item)}
+            aria-label={isFavorite ? `Remove ${item.name} from favorites` : `Add ${item.name} to favorites`}
+            aria-pressed={isFavorite}
             style={{
               fontSize: "1.5rem",
               background: isFavorite ? "#FFD90F" : "transparent",
@@ -87,7 +84,7 @@ export const Card = ({ item, onAddFavorite, isFavorite }) => {
               e.currentTarget.style.transform = "scale(1)";
             }}
           >
-            {isFavorite ? '❤️' : '🤍'}
+            <span aria-hidden="true">{isFavorite ? '❤️' : '🤍'}</span>
           </button>
         </div>
       </div>
@@ -96,7 +93,13 @@ export const Card = ({ item, onAddFavorite, isFavorite }) => {
 };
 
 Card.propTypes = {
-  item: PropTypes.object.isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    gender: PropTypes.string,
+    age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    occupation: PropTypes.string,
+  }).isRequired,
   onAddFavorite: PropTypes.func.isRequired,
   isFavorite: PropTypes.bool.isRequired
 };
